@@ -1,0 +1,44 @@
+body {
+    background:url(../img/background.jpg) top left;
+    background-size:100% 100%;
+    overflow:hidden;
+}
+
+.ui.container {
+    margin-top: 24em;
+    margin-left: 33em !important;
+}
+
+.ui.menu .item img.logo {
+    margin-right: 1.5em;
+}
+
+.main.container {
+    padding-top: 5em;
+    min-height: 74%;
+}
+
+.wireframe {
+    margin-top: 2em;
+}
+
+.ui.footer.segment {
+    margin: 7em 0em 0em;
+    padding: 2em 0em;
+}
+
+td tr {
+    text-align:center;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+[v-show] {
+    display: none;
+}
+
+.ui.sidebar {
+    top: 3em ;
+}

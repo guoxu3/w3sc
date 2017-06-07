@@ -1,0 +1,5 @@
+test.txt
+*.pyc
+*.log
+*_test.py
+*.bak

@@ -1,0 +1,6 @@
+tornado
+peewee
+salt
+ConfigParser
+uuid
+PyMySQL

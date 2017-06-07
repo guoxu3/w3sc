@@ -1,0 +1,6 @@
+insert into vpn_manager.user (user_id, parent_id, type, create_time, expire_time, enabled, port, net_flow, remarks) values ('a0cf923d468f11e7a21e', '', 'normal', 1496246400, 1498838400, 1, 10001, 0, '测试付费用户');
+insert into vpn_manager.user (user_id, parent_id, type, create_time, expire_time, enabled, port, net_flow, remarks) values ('a0cf923d468f11e7a211', 'a0cf923d468f11e7a21e', 'share', 1496246400, 1498838400, 0, 20001, 0, '');
+insert into vpn_manager.user (user_id, parent_id, type, create_time, expire_time, enabled, port, net_flow, remarks) values ('a0cf923d468f11e7a212', 'a0cf923d468f11e7a21e', 'share', 1496246400, 1498838400, 0, 20002, 0, '');
+insert into vpn_manager.user (user_id, parent_id, type, create_time, expire_time, enabled, port, net_flow, remarks) values ('a0cf923d468f11e7a213', 'a0cf923d468f11e7a21e', 'share', 1496246400, 1498838400, 0, 20003, 0, '');
+insert into vpn_manager.user (user_id, parent_id, type, create_time, expire_time, enabled, port, net_flow, remarks) values ('a0cf923d468f11e7a214', 'a0cf923d468f11e7a21e', 'share', 1496246400, 1498838400, 0, 20004, 0, '');
+insert into vpn_manager.user (user_id, parent_id, type, create_time, expire_time, enabled, port, net_flow, remarks) values ('a0cf923d468f11e7a215', 'a0cf923d468f11e7a21e', 'share', 1496246400, 1498838400, 0, 20005, 0, '');
