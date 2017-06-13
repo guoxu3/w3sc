@@ -9,17 +9,26 @@ from _db_init import *
 from lib.logger import log
 
 
-def row_count():
-    try:
-        count = User.select().count()
-    except Exception:
-        log.exception('exception')
-        return 0
+def row_count(id_type):
+    if id_type:
+        try:
+            count = User.select().where(User.type == id_type).count()
+        except Exception:
+            log.exception('exception')
+            return 0
+        else:
+            return count
     else:
-        return count
+        try:
+            count = User.select().count()
+        except Exception:
+            log.exception('exception')
+            return 0
+        else:
+            return count
 
 
-def get(user_id=None, start=0, count=10):
+def get(user_id=None, id_type=None, start=0, count=10):
     if user_id:
         try:
             info = User.select().where(User.user_id == user_id).get()
@@ -31,7 +40,7 @@ def get(user_id=None, start=0, count=10):
     else:
         data_list = []
         try:
-            for info in User.select().order_by(User.id).offset(start).limit(count):
+            for info in User.select().where(User.type == id_type).order_by(User.id).offset(start).limit(count):
                 data_list.append(info.__dict__['_data'])
         except Exception:
             log.exception('exception')

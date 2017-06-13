@@ -104,7 +104,7 @@ function GetQueryString(name) {
     }
 }
 
-function showPage(curPage, totalPage, count) {
+function showPage(curPage, totalPage, count, id_name) {
     if (count === null) {
         count = 10;
     }
@@ -201,7 +201,7 @@ function showPage(curPage, totalPage, count) {
             item += "<a class='icon item' href='" + href + (curPage+1) + "&count=" + count + "'><i class='right chevron icon'></i></a>";
         }
     }
-    $('#pages').append(item);
+    $("#"+id_name).append(item);
     return;
 }
 

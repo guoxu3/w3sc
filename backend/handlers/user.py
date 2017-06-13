@@ -32,13 +32,14 @@ class UserHandler(tornado.web.RequestHandler):
             return
 
         user_id = self.get_argument('user_id', None)
+        id_type = self.get_argument('id_type', None)
         start = int(self.get_argument('start', 0))
         count = int(self.get_argument('count', 10))
-        user_info = db_user.get(user_id, start, count)
+        user_info = db_user.get(user_id, id_type, start, count)
 
         if user_info is not False:
             ok = True
-            info = {'data': user_info, 'count': db_user.row_count()}
+            info = {'data': user_info, 'count': db_user.row_count(id_type)}
         else:
             ok = False
             info = u'获取用户信息失败'

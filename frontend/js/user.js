@@ -20,8 +20,25 @@ $(function () {
         }
     });
 
-    window.userlist = new Vue({
-        el: '#userlist',
+    window.normal_userlist = new Vue({
+        el: '#normal_userlist',
+        data: {
+            page: '',
+            user_list: [],
+            show_button: false
+        }
+    });
+
+    window.vip_userlist = new Vue({
+        el: '#vip_userlist',
+        data: {
+            page: '',
+            user_list: [],
+            show_button: false
+        }
+    });
+    window.try_userlist = new Vue({
+        el: '#try_userlist',
         data: {
             page: '',
             user_list: [],
@@ -70,7 +87,7 @@ function getUserByUserId(user_id) {
     }
 }
 
-function getAllUserData(callback) {
+function getAllUserData(callback, id_type, id_name) {
     var cur_page = GetQueryString('page');
     var user_num = 10;
     var count = GetQueryString('count');
@@ -79,7 +96,7 @@ function getAllUserData(callback) {
         count = 10;
     }
     var start = ((cur_page - 1) * count);
-    var URL = '/api/user?start=' + start +'&count=' + count;
+    var URL = '/api/user?id_type=' + id_type + '&start=' + start +'&count=' + count;
     $.ajax({
         type: "GET",
         url: URL,
@@ -91,7 +108,7 @@ function getAllUserData(callback) {
             } else {
                 callback(models.info, {}, cur_page, false);
             }
-            showPage(cur_page, Math.ceil(user_num/count), count);
+            showPage(cur_page, Math.ceil(user_num/count), count, id_name);
         },
         error: function (xhr, error, exception) {
             callback(exception.toString(), {}, cur_page, false);
@@ -99,17 +116,42 @@ function getAllUserData(callback) {
     });
 }
 
-function getAllUser() {
+function getAllNormalUser() {
     getAllUserData(function (err, data, page, show) {
         if (err){
             alert(err);
             return;
         }
-        userlist.$data.page = page;
-        userlist.$data.user_list = data;
-        userlist.$data.show_button = show;
-    });
+        normal_userlist.$data.page = page;
+        normal_userlist.$data.user_list = data;
+        normal_userlist.$data.show_button = show;
+    }, 'normal', 'normal_pages');
 }
+
+function getAllVipUser() {
+    getAllUserData(function (err, data, page, show) {
+        if (err){
+            alert(err);
+            return;
+        }
+        vip_userlist.$data.page = page;
+        vip_userlist.$data.user_list = data;
+        vip_userlist.$data.show_button = show;
+    }, 'vip', 'vip_pages');
+}
+
+function getAllTryUser() {
+    getAllUserData(function (err, data, page, show) {
+        if (err){
+            alert(err);
+            return;
+        }
+        try_userlist.$data.page = page;
+        try_userlist.$data.user_list = data;
+        try_userlist.$data.show_button = show;
+    }, 'try', 'try_pages');
+}
+
 
 function addUser() {
     var data = {

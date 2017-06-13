@@ -22,13 +22,19 @@
     <script>isAdminLogin();</script>
     <script>
         $(function () {
-            getAllUser();
+            getAllNormalUser();
+            getAllTryUser();
+            getAllVipUser();
         })
     </script>
     <script>
         $(function () {
             $('.activating.element').popup();
         });
+        $(function () {
+            $('.menu .item')
+                .tab()
+            ;});
     </script>
 </head>
 
@@ -41,10 +47,16 @@
             老司机VPN
         </a>
         <div class="ui simple dropdown item">
-            用户管理 <i class="dropdown icon"></i>
+            <a class="button" href="/admin/user_list">
+                <span>用户列表</span>
+            </a>
+        </div>
+        <div class="ui simple dropdown item">
+            新增用户 <i class="dropdown icon"></i>
             <div class="menu">
-                <a class="item" href="/admin/user_list">用户列表</a>
-                <a class="item" href="/admin/add_user">新增用户</a>
+                <a class="item" href="/admin/add_normal_user">新增普通用户</a>
+                <a class="item" href="/admin/add_try_user">新增试用用户</a>
+                <a class="item" href="/admin/add_vip_user">新增VIP用户</a>
             </div>
         </div>
         <div class="right menu">
@@ -60,14 +72,19 @@
 
 
 <div class="ui main container">
-    <h1 class="ui header">用户列表:</h1>
-    <div id="userlist">
+    <h1 class="ui header">用户列表</h1>
+    <div class="ui divider"></div>
+    <div class="ui top attached tabular menu">
+        <a class="item active" data-tab="normal">普通用户</a>
+        <a class="item" data-tab="try">试用用户</a>
+        <a class="item" data-tab="vip">VIP用户</a>
+    </div>
+    <div id="normal_userlist" class="ui bottom attached tab segment active" data-tab="normal">
         <table class="ui single line celled table">
             <thead>
             <tr>
                 <th class="center aligned">序号</th>
                 <th class="center aligned">用户ID</th>
-                <th class="center aligned">父IP</th>
                 <th class="center aligned">账户类型</th>
                 <th class="center aligned">创建时间</th>
                 <th class="center aligned">过期时间</th>
@@ -82,7 +99,6 @@
             <tr v-for="(user, index) in user_list">
                 <td v-cloak class="center aligned">{{ (page-1) * 10 + index + 1 }}</td>
                 <td v-cloak class="center aligned">{{ user.user_id }}</td>
-                <td v-cloak class="center aligned">{{ user.parent_id }}</td>
                 <td v-cloak class="center aligned">{{ user.type }}</td>
                 <td v-cloak class="center aligned">{{ user.create_time | time }}</td>
                 <td v-cloak class="center aligned">{{ user.expire_time | time }}</td>
@@ -91,19 +107,27 @@
                 <td v-cloak class="center aligned">{{ user.port }}</td>
                 <td v-cloak class="center aligned">{{ user.net_flow }}</td>
                 <td v-cloak class="center aligned">{{ user.remarks }}</td>
-                <td v-cloak class="center aligned" v-show="show_button" >
+                <td v-cloak class="center aligned" v-show="show_button">
                     <div v-cloak class="blue ui icon buttons">
-                        <button class="ui button" data-tooltip="续费" disabled="disabled" data-position="top left" @click="javascript:window.location.href='/admin/add_time?user_id=' + user.user_id" v-if="user.type == 'share'">
+                        <button class="ui button" data-tooltip="续费" disabled="disabled" data-position="top left"
+                                @click="javascript:window.location.href='/admin/add_time?user_id=' + user.user_id"
+                                v-if="user.type == 'share'">
                             <i class="clock icon"></i>
                         </button>
-                        <button class="ui button" data-tooltip="删除" disabled="disabled" data-position="top right" v-bind:onclick="'javascript:deleteUser(\'' + user.user_id + '\');'" v-if="user.type == 'share'">
+                        <button class="ui button" data-tooltip="删除" disabled="disabled" data-position="top right"
+                                v-bind:onclick="'javascript:deleteUser(\'' + user.user_id + '\');'"
+                                v-if="user.type == 'share'">
                             <i class="trash icon"></i>
                         </button>
 
-                        <button class="ui button" data-tooltip="续费" data-position="top left" @click="javascript:window.location.href='/admin/add_time?user_id=' + user.user_id"  v-if="user.type != 'share'">
+                        <button class="ui button" data-tooltip="续费" data-position="top left"
+                                @click="javascript:window.location.href='/admin/add_time?user_id=' + user.user_id"
+                                v-if="user.type != 'share'">
                             <i class="clock icon"></i>
                         </button>
-                        <button class="ui button" data-tooltip="删除" data-position="top right" v-bind:onclick="'javascript:deleteUser(\'' + user.user_id + '\');'"  v-if="user.type != 'share'">
+                        <button class="ui button" data-tooltip="删除" data-position="top right"
+                                v-bind:onclick="'javascript:deleteUser(\'' + user.user_id + '\');'"
+                                v-if="user.type != 'share'">
                             <i class="trash icon"></i>
                         </button>
                     </div>
@@ -112,8 +136,161 @@
             </tbody>
             <tfoot>
             <tr>
-                <th colspan="12">
-                    <div id="pages" class="ui right floated pagination menu">
+                <th colspan="1">
+                    <a href="/admin/add_normal_user">
+                        <button class="ui primary button">
+                            创建普通用户
+                        </button>
+                    </a>
+                </th>
+                <th colspan="11">
+                    <div id="normal_pages" class="ui right floated pagination menu">
+                    </div>
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div id="try_userlist" class="ui bottom attached tab segment" data-tab="try">
+        <table class="ui single line celled table">
+            <thead>
+            <tr>
+                <th class="center aligned">序号</th>
+                <th class="center aligned">用户ID</th>
+                <th class="center aligned">账户类型</th>
+                <th class="center aligned">创建时间</th>
+                <th class="center aligned">过期时间</th>
+                <th class="center aligned">是否可用</th>
+                <th class="center aligned">端口号</th>
+                <th class="center aligned">流量</th>
+                <th class="center aligned">备注</th>
+                <th class="center aligned">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(user, index) in user_list">
+                <td v-cloak class="center aligned">{{ (page-1) * 10 + index + 1 }}</td>
+                <td v-cloak class="center aligned">{{ user.user_id }}</td>
+                <td v-cloak class="center aligned">{{ user.type }}</td>
+                <td v-cloak class="center aligned">{{ user.create_time | time }}</td>
+                <td v-cloak class="center aligned">{{ user.expire_time | time }}</td>
+                <td v-cloak class="center aligned" v-if="user.enabled == true">是</td>
+                <td v-cloak class="center aligned" v-if="user.enabled == false">否</td>
+                <td v-cloak class="center aligned">{{ user.port }}</td>
+                <td v-cloak class="center aligned">{{ user.net_flow }}</td>
+                <td v-cloak class="center aligned">{{ user.remarks }}</td>
+                <td v-cloak class="center aligned" v-show="show_button">
+                    <div v-cloak class="blue ui icon buttons">
+                        <button class="ui button" data-tooltip="续费" disabled="disabled" data-position="top left"
+                                @click="javascript:window.location.href='/admin/add_time?user_id=' + user.user_id"
+                                v-if="user.type == 'share'">
+                            <i class="clock icon"></i>
+                        </button>
+                        <button class="ui button" data-tooltip="删除" disabled="disabled" data-position="top right"
+                                v-bind:onclick="'javascript:deleteUser(\'' + user.user_id + '\');'"
+                                v-if="user.type == 'share'">
+                            <i class="trash icon"></i>
+                        </button>
+
+                        <button class="ui button" data-tooltip="续费" data-position="top left"
+                                @click="javascript:window.location.href='/admin/add_time?user_id=' + user.user_id"
+                                v-if="user.type != 'share'">
+                            <i class="clock icon"></i>
+                        </button>
+                        <button class="ui button" data-tooltip="删除" data-position="top right"
+                                v-bind:onclick="'javascript:deleteUser(\'' + user.user_id + '\');'"
+                                v-if="user.type != 'share'">
+                            <i class="trash icon"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="1">
+                    <a href="/admin/add_try_user">
+                        <button class="ui primary button">
+                            创建试用用户
+                        </button>
+                    </a>
+                </th>
+                <th colspan="11">
+                    <div id="try_pages" class="ui right floated pagination menu">
+                    </div>
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div id="vip_userlist" class="ui bottom attached tab segment" data-tab="vip">
+        <table class="ui single line celled table">
+            <thead>
+            <tr>
+                <th class="center aligned">序号</th>
+                <th class="center aligned">用户ID</th>
+                <th class="center aligned">账户类型</th>
+                <th class="center aligned">创建时间</th>
+                <th class="center aligned">过期时间</th>
+                <th class="center aligned">是否可用</th>
+                <th class="center aligned">端口号</th>
+                <th class="center aligned">流量</th>
+                <th class="center aligned">备注</th>
+                <th class="center aligned">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(user, index) in user_list">
+                <td v-cloak class="center aligned">{{ (page-1) * 10 + index + 1 }}</td>
+                <td v-cloak class="center aligned">{{ user.user_id }}</td>
+                <td v-cloak class="center aligned">{{ user.type }}</td>
+                <td v-cloak class="center aligned">{{ user.create_time | time }}</td>
+                <td v-cloak class="center aligned">{{ user.expire_time | time }}</td>
+                <td v-cloak class="center aligned" v-if="user.enabled == true">是</td>
+                <td v-cloak class="center aligned" v-if="user.enabled == false">否</td>
+                <td v-cloak class="center aligned">{{ user.port }}</td>
+                <td v-cloak class="center aligned">{{ user.net_flow }}</td>
+                <td v-cloak class="center aligned">{{ user.remarks }}</td>
+                <td v-cloak class="center aligned" v-show="show_button">
+                    <div v-cloak class="blue ui icon buttons">
+                        <button class="ui button" data-tooltip="续费" disabled="disabled" data-position="top left"
+                                @click="javascript:window.location.href='/admin/add_time?user_id=' + user.user_id"
+                                v-if="user.type == 'share'">
+                            <i class="clock icon"></i>
+                        </button>
+                        <button class="ui button" data-tooltip="删除" disabled="disabled" data-position="top right"
+                                v-bind:onclick="'javascript:deleteUser(\'' + user.user_id + '\');'"
+                                v-if="user.type == 'share'">
+                            <i class="trash icon"></i>
+                        </button>
+
+                        <button class="ui button" data-tooltip="续费" data-position="top left"
+                                @click="javascript:window.location.href='/admin/add_time?user_id=' + user.user_id"
+                                v-if="user.type != 'share'">
+                            <i class="clock icon"></i>
+                        </button>
+                        <button class="ui button" data-tooltip="删除" data-position="top right"
+                                v-bind:onclick="'javascript:deleteUser(\'' + user.user_id + '\');'"
+                                v-if="user.type != 'share'">
+                            <i class="trash icon"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="1">
+                    <a href="/admin/add_vip_user">
+                        <button class="ui primary button">
+                            创建VIP用户
+                        </button>
+                    </a>
+                </th>
+                <th colspan="11">
+                    <div id="vip_pages" class="ui right floated pagination menu">
                     </div>
                 </th>
             </tr>
